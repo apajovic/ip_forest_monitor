@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Forest monitor</title>
+  <!--meta name="generator" content="WYSIWYG Web Builder 17 Trial Version - https://www.wysiwygwebbuilder.com"-->
+  <link href="../static/styles/sajt.css" rel="stylesheet">
+  <link href="../static/styles/index.css" rel="stylesheet">
+  <link href="../static/styles/table.css" rel="stylesheet">
+</head>
+
+<body>
+
+  <div id="TopBanner" style="position : absolute;">
+    <img src="/static/top.jpg">
+  </div>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  
+  <div id="MainStuff "style="position : absolute;" >
+  {% include 'image-box.html' %}
+  {% include 'sensor_table.html' %}
+  </div>
+
+  <script>
+    setInterval(function update_item() {
+      $('#wb_image').load("render_stream");
+      $('#sensor_table_main').load("sensor_data");
+    }, 2000);
+  </script>
+
+
+</body>
+</html>

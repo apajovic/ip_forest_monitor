@@ -1,0 +1,34 @@
+<script>
+  function selected_row(row) {
+    var data = new FormData()
+    data.append("sensor_id_selected", row.id)
+    console.log(data)
+    fetch(`${window.origin}/choose_stream`, {
+      method: "POST", 
+      body: data})
+  };
+</script>
+
+<table id='sensor_table_main' id="Table1">
+  <tr>
+    <th>Name</th>
+    <th>Uptime</th>
+    <th>Status</th>
+  </tr>
+
+
+  {% for key, value in sensor_info.items() %}
+  <tr id={{key}}  onclick="selected_row(this)">
+    <td>
+      <p style="font-size:8px;line-height:9.5px;">&nbsp;{{key}}</p>
+    </td>
+    <td>
+      <p style="font-size:8px;line-height:9.5px;">&nbsp;{{value.timestamp}}</p>
+    </td>
+    <td>
+      <p {% if value.status < 5 %} class=status_ok {% else %} class=status_bad {% endif %}
+        style="font-size:8px;line-height:9.5px;">&nbsp;{{value.status}}</p>
+    </td>
+  </tr>
+  {% endfor %}
+</table>

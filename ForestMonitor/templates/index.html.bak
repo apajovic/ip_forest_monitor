@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Untitled Page</title>
+<meta name="generator" content="WYSIWYG Web Builder 17 Trial Version - https://www.wysiwygwebbuilder.com">
+<link href="sajt.css" rel="stylesheet">
+<link href="index.css" rel="stylesheet">
+</head>
+<body>
+<a href="https://www.wysiwygwebbuilder.com" target="_blank"><img src="images/builtwithwwb17.png" alt="WYSIWYG Web Builder" style="position:absolute;left:153px;top:903px;margin: 0;border-width:0;z-index:250" width="88" height="31"></a>
+<div id="wb_Image1" style="position:absolute;left:22px;top:557px;width:502px;height:187px;z-index:2;">
+<img src="images/splashscreen.png" id="Image1" alt="" width="502" height="187"></div>
+<div id="wb_Form1" style="position:absolute;left:470px;top:82px;width:475px;height:328px;z-index:3;">
+<form name="Form1" method="post" action="mailto:yourname@yourdomain.com" enctype="multipart/form-data" id="Form1">
+<table style="position:absolute;left:3px;top:4px;width:469px;height:321px;z-index:0;" id="Table1">
+<tr>
+<td class="cell0"><h1> Name</h1><br/></td>
+<td class="cell1">&nbsp;<h1>Uptime</h1><br/></td>
+<td class="cell2">&nbsp;<h1>Status</h1><br/></td>
+</tr>
+{% for key, value in camera_info.items() %}
+<tr>
+<td class="cell3"><p style="font-size:8px;line-height:9.5px;">&nbsp;{{key}}</p></td>
+<td class="cell3"><p style="font-size:8px;line-height:9.5px;">&nbsp;{{value.timesnap}}</p></td>
+<td class="cell4"><p style="font-size:8px;line-height:9.5px;">&nbsp;{{value.status}}</p></td>
+</tr>
+<tr>
+<td class="cell3"><p style="font-size:8px;line-height:9.5px;">&nbsp;cell2</p></td>
+<td class="cell3"><p style="font-size:8px;line-height:9.5px;">&nbsp;1.2</p></td>
+<td class="cell4"><p style="font-size:8px;line-height:9.5px;">&nbsp;ok</p></td>
+</tr>
+<tr>
+<td class="cell3"><p style="font-size:8px;line-height:9.5px;">&nbsp;cell3</p></td>
+<td class="cell3"><p style="font-size:8px;line-height:9.5px;">&nbsp;1.3</p></td>
+<td class="cell4"><p style="font-size:8px;line-height:9.5px;">&nbsp;ok</p></td>
+</tr>
+<tr>
+<td class="cell5"><p style="font-size:8px;line-height:9.5px;">&nbsp;cell4</p></td>
+<td class="cell5"><p style="font-size:8px;line-height:9.5px;"> 1.4</p></td>
+<td class="cell6"><p style="font-size:8px;line-height:9.5px;">&nbsp;ok</p></td>
+</tr>
+</table>
+</form>
+</div>
+</body>
+</html>

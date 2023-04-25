@@ -1,0 +1,26 @@
+table, th, td {
+    border: 1px solid;
+}
+table{
+    border-collapse:collapse;
+    position:fixed;
+    left:700px;
+    top:400px;
+}
+th {
+    height:40px;
+}
+th {
+    background-color: #01482f;
+    color: white;
+}
+tr:hover{
+    background-color: coral;
+}
+tr:active{
+    background-color:rgb(120, 49, 23); 
+}
+td {
+    width: 70px;
+    text-align: center;
+}
