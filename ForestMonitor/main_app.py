@@ -1,47 +1,54 @@
 import io
 import logging
-import monitor_server as ms
+import monitor.server as ms
 from base64 import b64encode
 from threading import Thread
-from sensor_status import SensorDatabase
+from lib.sensor_status import SensorService
+import flask
 from flask import Flask, request, render_template, redirect, url_for
 
 logging.disable(logging.DEBUG)
 app = Flask(__name__) 
 
-server_database = SensorDatabase()
-monitor_server = ms.MonitorServer(server_database)
+sensor_service = SensorService()
+monitor_server = ms.MonitorServer(sensor_service)
 
-#ALL TOGETHER
-@app.route('/home',methods = ['POST', 'GET'])
+@app.route('/home',methods = ['GET'])
 def home():
     sensor_info = monitor_server.get_all_sensor_stats()
     return render_template("index.html",sensor_info = sensor_info)
 
 
-#DISPLAY SENSOR DATA
 @app.route("/sensor_data",methods = ['GET'])
-def send_sensor_info():
-    sensor_info = monitor_server.get_all_sensor_stats()
-    return render_template("sensor_table.html",sensor_info = sensor_info)
+def send_all_sensor_info():
+    response = flask.jsonify(monitor_server.get_all_sensor_stats())
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
+@app.route("/sensor_data/<sensor_id>",methods = ['GET'])
+def send_sensor_info(sensor_id):
+    return monitor_server.get_sensor_stats(sensor_id), 200
+    
 # SELECT SENSOR
-@app.route("/choose_stream", methods=["GET", 'POST']) 
+@app.route("/choose_stream", methods=["GET"]) 
 def choose_stream(): 
-    selected_id = request.form.get('sensor_id_selected')
+    
+    command_params = dict(request.args)
+    selected_id = command_params.get("id")
     if selected_id is not None:
         monitor_server.make_request_from_client(int(selected_id), ms.SEND_REQUEST)
     
-    sensor_info = monitor_server.get_all_sensor_stats()
-    return render_template("index.html",sensor_info = sensor_info)
+    response = flask.jsonify({"status":"accepted"})
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response, 200
 
 # RENDERING IMAGE
 @app.route("/render_stream", methods=["GET"]) 
 def render_stream():
     original_image = monitor_server.get_monitor_image()
     file_object = io.BytesIO(original_image)
-    base64img = "data:image/png;base64," + b64encode(file_object.getvalue()).decode('ascii')
-    return render_template("image-box.html", image = base64img, )
+    
+    return  "data:image/png;base64," + b64encode(file_object.getvalue()).decode('ascii')
     
 
 
@@ -59,12 +66,12 @@ def login():
             error = "Invalid Credentials, pleas try again"
         else:
             return redirect(url_for("home"))
-    return render_template("login.html", error=error)
+    return render_template("main/login.html", error=error)
 
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return render_template('main/404.html'), 404
 
 if __name__ == "__main__":
 

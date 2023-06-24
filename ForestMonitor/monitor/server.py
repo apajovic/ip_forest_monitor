@@ -1,7 +1,7 @@
 import socket
 from queue import Queue
 from threading import Thread, Lock
-from sensor_status import SensorDatabase
+from lib.sensor_status import SensorService
 
 
 SEND_REQUEST = "START_SEND"
@@ -18,10 +18,10 @@ class MonitorServer:
     _port = 2004
     _send_request_lock = Lock()
     
-    def __init__(self, sensor_database:SensorDatabase):
-        self.sensor_database=sensor_database
+    def __init__(self, sensor_service:SensorService):
+        self.sensor_service = sensor_service
         self.list_of_clients = []
-        self.monitor_image = open("images/empty-image.jpg", "rb").read()
+        self.monitor_image = open("monitor/__demo/empty-image.jpg", "rb").read()
 
 
     def make_request_from_client(self, client_id, request):
@@ -53,10 +53,10 @@ class MonitorServer:
                 if(message_type=="INF"):
                     client_message = connection.recv(500).decode('utf-8')
                     # Update the current status
-                    current_status = self.sensor_database.parse_status(client_message)
+                    current_status = self.sensor_service.parse_status(client_message)
 
                 elif (message_type=="IMG"):
-                    self.monitor_image = connection.recv(50000)
+                    self.monitor_image = connection.recv(500000)
                 
                 response = "OK"
                 if current_status is not None:
@@ -69,7 +69,9 @@ class MonitorServer:
                         response = ",".join([response, req])
                 
                 connection.sendall(str.encode(response))
-            except:
+            except Exception as e:
+                self.sensor_service.reset_status(current_status)
+                print(e)
                 break
         connection.close()
 
@@ -103,7 +105,10 @@ class MonitorServer:
             ServerSideSocket.close()
 
     def get_all_sensor_stats(self):
-        return self.sensor_database.get_all_sensor_stats()
+        return self.sensor_service.get_all_sensor_stats()
+    
+    def get_sensor_stats(self, id):
+        return self.sensor_service.get_sensor_stats(id)
     
     def get_monitor_image(self):
         return self.monitor_image
@@ -122,8 +127,8 @@ if __name__ == "__main__":
             time.sleep(5)
             ms.make_request_from_client(3, STOP_REQUEST)
 
-    sdtb = SensorDatabase()
-    ms = MonitorServer(sdtb)
+    sensor_service = SensorService()
+    ms = MonitorServer(sensor_service)
     test_thread = Thread(target=test_request, args=(ms, ))
     test_thread.start()
     ms.run_info_server()

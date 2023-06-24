@@ -68,3 +68,9 @@ input:focus, textarea:focus, select:focus
    border-color: darkgreen;
    height:240px;
 }
+.TopBanner{
+   position: absolute; 
+   top: 0; 
+   left: 0; 
+   width: 100%;
+}
